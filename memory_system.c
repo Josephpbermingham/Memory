@@ -5,6 +5,15 @@
 #include "memory.h"
 #include "decoder.h"
 
+typedef union{
+	unsigned int word;
+	struct{
+		unsigned char zero;
+		unsigned char one;
+		unsigned char two;
+		unsigned char three;
+	};
+}Word;
 void split_address(int address, unsigned char *lower, unsigned char *upper) {
 	*lower = address & DECODER_BITMASK;
 	*upper = (address & DECODER_BITMASK << (DECODER_SHIFTER)) >> DECODER_SHIFTER;
@@ -32,7 +41,12 @@ unsigned int memory_fetch_word(int address) {
  * 4 bytes
  */
 void memory_store_word(int address, unsigned int value) {
-
+	Word w;
+	w.word = value;
+	memory_store(address, w.zero);
+	memory_store(address + 1, w.one);
+	memory_store(address + 2, w.two);
+	memory_store(address + 3, w.three);
 }
 /*
 run memory add on some file 
