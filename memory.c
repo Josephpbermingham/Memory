@@ -19,4 +19,14 @@ void mem_dump() {
 void mem_put(unsigned int row_selected, unsigned int col_selected, unsigned char b) {
 	mem[bit_find(row_selected)][bit_find(col_selected)]=b;
 }
+void spit(){
+	for(int i =0;i<32;i++){
+		for(int j=0;j<32;j++){
+		if(j%8==0){
+			printf("\n");
+		}
+			printf("%x",mem[i][j]);
+}
+}
+}
 

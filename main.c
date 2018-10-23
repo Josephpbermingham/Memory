@@ -8,7 +8,11 @@ int main(int argc, const char* argv[]) {
 	//printf("out of load mem\n entering memory fill\n");
 	unsigned char c = 25;
 	memory_fill(5,c,7);
-	printf("out of mem fill\n");
-	memory_store_word(0,65535);
+//	printf("out of mem fill\n");
+	memory_store(0,0xff);
+	memory_store(1,0xAA);
+	printf("%d %d\n",memory_fetch(0),memory_fetch(1));
+	printf("%d %d\n",memory_fetch(33),memory_fetch(34));
+	//spit();
 	mem_dump();
 }

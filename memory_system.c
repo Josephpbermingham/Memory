@@ -23,12 +23,12 @@ void memory_store(int address, unsigned char value) {
 	unsigned char lower, upper;
 	split_address(address, &lower,&upper);
 	printf("%d, %u, %u\n",address, lower,upper);
-	mem_put(decoder(lower), decoder(upper), value);
+	mem_put(decoder(upper), decoder(lower), value);//THIS WAS THE ISSUE I NEEDED TO SWAP LOWER AND UPPER
 }
 unsigned char memory_fetch(int address) {
 	unsigned char lower, upper;
 	split_address(address, &lower, &upper);
-	return(mem_get(upper, lower));
+	return(mem_get(upper, lower));//TODO check if this is correct
 
 }
 /*
