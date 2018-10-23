@@ -19,6 +19,4 @@ void mem_dump() {
 void mem_put(unsigned int row_selected, unsigned int col_selected, unsigned char b) {
 	mem[bit_find(row_selected)][bit_find(col_selected)]=b;
 }
-void memory_fill(int start_address, unsigned char value, int num_bytes) {
-	
-}
+
