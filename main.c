@@ -9,5 +9,6 @@ int main(int argc, const char* argv[]) {
 	unsigned char c = 25;
 	memory_fill(5,c,7);
 	printf("out of mem fill\n");
+	memory_store_word(0,65535);
 	mem_dump();
 }

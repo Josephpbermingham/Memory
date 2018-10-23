@@ -43,10 +43,10 @@ unsigned int memory_fetch_word(int address) {
 void memory_store_word(int address, unsigned int value) {
 	Word w;
 	w.word = value;
-	memory_store(address, w.zero);
-	memory_store(address + 1, w.one);
-	memory_store(address + 2, w.two);
-	memory_store(address + 3, w.three);
+	memory_store(address+3, w.zero);
+	memory_store(address + 2, w.one);
+	memory_store(address + 1, w.two);
+	memory_store(address, w.three);
 }
 /*
 run memory add on some file 
