@@ -45,3 +45,16 @@ int get_cpsr();
 void show_regs();
 void step();
 void step_n(int n);
+
+typedef struct{ 
+	unsigned char two;
+	unsigned char three;
+}holder;
+typedef union{//we dont know what the top is
+	unsigned int code;
+	struct{
+		unsigned char zero;
+		unsigned char one;
+		holder hold;
+	};
+}opsplitter;
