@@ -53,8 +53,9 @@ typedef struct{
 typedef union{//we dont know what the top is
 	unsigned int code;
 	struct{
-		unsigned char zero;
-		unsigned char one;
 		holder hold;
+		unsigned char one;
+		unsigned char zero;
+		
 	};
 }opsplitter;

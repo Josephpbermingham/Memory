@@ -37,7 +37,7 @@ void show_regs(){
  * decodes them (int opcode = inst>>24;)
  * execute (opcode switch statement)
  * 0000 0001 0001 0010 0000
- * n/a   LDR   reg1 2   n/a
+ * b1 = opslitter.two
 */ 
 void step(){ //00(command) 00(r0) 00(r1) 00 (r3)
 	//unsigned int opcode = registers[PC];
