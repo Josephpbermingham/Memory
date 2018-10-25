@@ -35,7 +35,8 @@ unsigned char memory_fetch(int address) {
  * gets four bytes 
  */
 unsigned int memory_fetch_word(int address) {
-	return 0;
+	Word getWord = memory_fetch(address);
+	return getWord.word;
 }
 /* 
  * 4 bytes
