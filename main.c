@@ -11,6 +11,4 @@ int main(int argc, const char* argv[]) {
 	printf("%x\n",test.hold.two);
 	printf("%x\n",test.hold.three);
 
-
-
 }
