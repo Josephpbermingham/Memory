@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "cpu.h"
+#include "memory_system.h"
 int registers[16];
-int cpsr;//status register
+int cpsr;//status register LT = 0 GT = 1 EQ = 3
 
 //sets the value of reg to value
 void set_reg(int reg, int value){
 registers[reg]=value;
+printf("the value of register %d is %x\n",reg,registers[reg]);
 }
 //returns the value of the register number (int reg)
 int get_reg(int reg){
@@ -40,35 +42,79 @@ void show_regs(){
  * b1 = opslitter.two
 */ 
 void step(){ //00(command) 00(r0) 00(r1) 00 (r3)
-	unsigned int opcode;// = registers[PC];
 	Word code;
-	code.word = registers[PC];
+	code.word = memory_fetch_word(registers[PC]);
 	//word. = (unsigned int)registers[PC];
+	for(int i = 0; i<16; i++){
+		//printf("CODE ZERO IS %x\n",code.word);
+		if(registers[i]!=0)
+		printf("me_R%d = %x\n", i, registers[i]);
+	}
 	switch(code.zero){
 		case LDR:
-		//if(opcode.one ==0){
-		//printf("%s\n","ERROR NO REGISTER GIVEN");
-		
+			registers[code.one]=memory_fetch_word(code.half);//loads with what is add that address
 		break;
 		case LDI:
-		
+			registers[code.one]=code.half;
 		break;
 		case LDX:
-		
+			registers[code.one] = memory_fetch_word(registers[code.three]+code.two);
 		break;
-		case STR: break;
+		case STR:
+			memory_store_word(code.half,registers[code.one]);
+		 break;
 		case ADD:
-			
+			registers[code.one]=registers[code.two]+registers[code.three];
 		break;
-		case SUB: break;
-		case MUL: break;
-		case DIV: break;
-		case CMP: break;
-		case B: break;
-		case BEQ: break;
-		case BNE: break;
-		case BLT: break;
-		case BGT: break;
+		case SUB:
+			registers[code.one]=(registers[code.two])-(registers[code.three]);
+		break;
+		case MUL: 
+			registers[code.one]=(registers[code.two])*(registers[code.three]);
+		break;
+		case DIV: 
+			registers[code.one]=(registers[code.two])/(registers[code.three]);
+		break;
+		case CMP:
+			if(registers[code.two]>registers[code.three]){
+				cpsr = LT;
+			}
+			else if(registers[code.two]<registers[code.three]){
+				cpsr = GT;
+			}
+			else if(registers[code.two]==registers[code.three]){
+				cpsr = LT;
+			}
+		break;
+		case B:
+			code.word=code.word<<8;
+			registers[PC]=code.word;
+		break;
+		case BEQ: 
+			if(cpsr == Z){
+			code.word=code.word<<8;
+			registers[PC]=code.word;
+		}
+		break;
+		case BNE:
+		if(cpsr != Z){
+		code.word=code.word<<8;
+		registers[PC]=code.word;
+		}
+		break;
+		case BLT:
+		if(cpsr == LT){
+			code.word=code.word<<8;
+			registers[PC]=code.word;
+		}
+		break;
+		case BGT: 
+		if(cpsr == GT){
+			code.word=code.word<<8;
+			registers[PC]=code.word;
+		}
+		break;
+		printf("EXITIING CASES\n");
 	}
 	
 }

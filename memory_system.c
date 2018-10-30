@@ -22,13 +22,13 @@ void split_address(int address, unsigned char *lower, unsigned char *upper) {
 void memory_store(int address, unsigned char value) {
 	unsigned char lower, upper;
 	split_address(address, &lower,&upper);
-	printf("%d, %u, %u\n",address, lower,upper);
-	mem_put(decoder(upper), decoder(lower), value);//THIS WAS THE ISSUE I NEEDED TO SWAP LOWER AND UPPER
+	//printf("%d, %u, %u\n",address, lower,upper);
+	memory_put(decoder(upper), decoder(lower), value);//THIS WAS THE ISSUE I NEEDED TO SWAP LOWER AND UPPER
 }
 unsigned char memory_fetch(int address) {
 	unsigned char lower, upper;
 	split_address(address, &lower, &upper);
-	return(mem_get(upper, lower));//TODO check if this is correct
+	return(memory_get(upper, lower));//TODO check if this is correct
 
 }
 /*
@@ -71,7 +71,7 @@ void load_memory(char *filename) {
 		else {
 			linear = atoi(line);
 			memory_store((address+i-1),linear);
-			printf("%d,%d\n",(address+i-1),(unsigned char)linear);
+			//printf("%d,%d\n",(address+i-1),(unsigned char)linear);
 		}
 		i++;
 		}

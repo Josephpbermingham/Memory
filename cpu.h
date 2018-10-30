@@ -46,20 +46,6 @@ void show_regs();
 void step();
 void step_n(int n);
 
-typedef struct{ 
-	unsigned char two;//first one 
-	unsigned char three;//second one
-}holder;
-typedef union{//we dont know what the top is
-	unsigned int code;
-	struct{
-		holder hold;
-		unsigned char one;
-		unsigned char zero;
-		
-	};
-}opsplitter;
-
 typedef union{
 	unsigned word;
 	struct{
