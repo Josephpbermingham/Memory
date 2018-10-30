@@ -40,14 +40,15 @@ void show_regs(){
  * b1 = opslitter.two
 */ 
 void step(){ //00(command) 00(r0) 00(r1) 00 (r3)
-	//unsigned int opcode = registers[PC];
-	opsplitter opcode;
-	opcode.code = (unsigned int)registers[PC];
-	switch(opcode.zero){
+	unsigned int opcode;// = registers[PC];
+	Word code;
+	code.word = registers[PC];
+	//word. = (unsigned int)registers[PC];
+	switch(code.zero){
 		case LDR:
-		if(opcode.one ==0){
-		printf("%s\n","ERROR NO REGISTER GIVEN");
-		}
+		//if(opcode.one ==0){
+		//printf("%s\n","ERROR NO REGISTER GIVEN");
+		
 		break;
 		case LDI:
 		
