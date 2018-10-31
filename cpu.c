@@ -133,6 +133,24 @@ void step(){ //00(command) 00(r0) 00(r1) 00 (r3)
 			registers[PC] = code.word=code.word>>8;
 			registers[PC] = code.word - 4;
 			break;
+		case MOV:
+			set_reg(code.one, code.zero);
+			break;
+		case BX:
+			set_reg(PC, code.zero - 4);
+			break;
+		case BLX:
+			set_reg(LR, registers[PC] + 4);
+			set_reg(PC, code.zero - 4);
+			break;
+		case PUSH:
+			set_reg(SR, registers[SR] - 4);
+			memory_store_word(registers[SR], registers[code.zero]);
+			break;
+		case POP:
+			set_reg(code.zero, memory_fetch_word(registers[SR]));
+			set_reg(SR, registers[SR] + 4);
+			break;
 		}
 		
 	registers[PC] += 4;
