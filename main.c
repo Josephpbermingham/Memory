@@ -8,13 +8,6 @@
 #include "cpu.h"
 
 int main(int argc, char **argv) {
-		
-/*	Word w;
-	w.word = 0xffaabbcc;
-	printf("%x\n%x\n%x\n%x\n%x\n%x\n%x\n", w.word, w.int3,w.half,w.zero,w.one,w.two,w.three);
-	w.word=w.word<<8;
-	printf("%x\n",w.word);
-*/
     printf("0x%08x\n", decoder(4));
     printf("0x%08x\n", decoder(1));
     
@@ -27,14 +20,13 @@ int main(int argc, char **argv) {
     
     printf("memory_fetch(0x111): 0x%02x\n", memory_fetch(0x111));
     memory_dump();
-	printf("\n\n%s","AFTER FIRST DUMP");  
-    load_memory("mem1.txt");//what do we want from this
+    
+    load_memory("program1.txt");
     printf("memory_fetch_word(12): 0x%08x\n", memory_fetch_word(12));
 
-  //  memory_dump(270, 20);
+    memory_dump(270, 20);
     
     memory_store_word(80, 10);          // 10 at address 80
-    printf("memory_fetch(50): 0x%02x\n", memory_fetch_word(50));
     memory_store_word(84, 20);          // 20 at address 84
     memory_store_word(100, 0x01000050); // LDR R0,80
     memory_store_word(104, 0x01010054); // LDR R1,84

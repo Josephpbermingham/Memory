@@ -13,6 +13,17 @@
 #define BNE 12
 #define BLT 13
 #define BGT 14
+#define BL 15
+#define BLX 16
+#define BX 17
+#define AND 18
+#define ORR 19
+#define EOR 20
+#define MOV 21
+#define PUSH 22
+#define POP 23
+#define BLE 24
+#define BGE 25
 
 #define Z 1
 #define LT 2

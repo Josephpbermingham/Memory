@@ -7,13 +7,12 @@ int cpsr;//status register LT = 0 GT = 1 EQ = 3
 
 //sets the value of reg to value
 void set_reg(int reg, int value){
-registers[reg]=value;
-printf("the value of register %d is %x\n",reg,registers[reg]);
+	registers[reg]=value;
 }
 //returns the value of the register number (int reg)
 int get_reg(int reg){
 	return registers[reg];
-	}
+}
 	//returns the contents of cpsr
 int get_cpsr(){
 	return cpsr;
@@ -26,7 +25,7 @@ void show_regs(){
 		printf("%s","R");
 		printf("%d",i);
 		printf("%s"," == ");
-		printf("%d\n",registers[i]);
+		printf("%x\n",registers[i]);
 
 	}
 }
@@ -44,79 +43,99 @@ void show_regs(){
 void step(){ //00(command) 00(r0) 00(r1) 00 (r3)
 	Word code;
 	code.word = memory_fetch_word(registers[PC]);
-	//word. = (unsigned int)registers[PC];
-	for(int i = 0; i<16; i++){
-		//printf("CODE ZERO IS %x\n",code.word);
-		if(registers[i]!=0)
-		printf("me_R%d = %x\n", i, registers[i]);
-	}
-	switch(code.zero){
+	switch(code.three){
 		case LDR:
-			registers[code.one]=memory_fetch_word(code.half);//loads with what is add that address
+			set_reg(code.two, memory_fetch_word(code.zero + (code.one << 8)));
 		break;
 		case LDI:
-			registers[code.one]=code.half;
+			set_reg(code.two, code.zero + (code.one << 8));
 		break;
 		case LDX:
-			registers[code.one] = memory_fetch_word(registers[code.three]+code.two);
+			registers[code.two] = memory_fetch_word(registers[code.zero]+code.one);
 		break;
 		case STR:
-			memory_store_word(code.half,registers[code.one]);
+			memory_store_word(code.zero + (code.one << 8),registers[code.two]);
 		 break;
 		case ADD:
-			registers[code.one]=registers[code.two]+registers[code.three];
+			set_reg(code.two, registers[code.one] + registers[code.zero]);
 		break;
 		case SUB:
-			registers[code.one]=(registers[code.two])-(registers[code.three]);
+			set_reg(code.two, registers[code.one] - registers[code.zero]);
 		break;
 		case MUL: 
-			registers[code.one]=(registers[code.two])*(registers[code.three]);
+			set_reg(code.two, registers[code.one] * registers[code.zero]);
 		break;
 		case DIV: 
-			registers[code.one]=(registers[code.two])/(registers[code.three]);
+			set_reg(code.two, registers[code.one] / registers[code.zero]);
 		break;
 		case CMP:
-			if(registers[code.two]>registers[code.three]){
+			if(registers[code.one]>registers[code.zero]){
 				cpsr = LT;
 			}
-			else if(registers[code.two]<registers[code.three]){
+			else if(registers[code.one]<registers[code.zero]){
 				cpsr = GT;
 			}
-			else if(registers[code.two]==registers[code.three]){
-				cpsr = LT;
+			else if(registers[code.one]==registers[code.zero]){
+				cpsr = Z;
 			}
 		break;
 		case B:
-			code.word=code.word<<8;
-			registers[PC]=code.word;
+			code.word=code.word>>8;
+			registers[PC] = code.word - 4;
 		break;
 		case BEQ: 
 			if(cpsr == Z){
-			code.word=code.word<<8;
-			registers[PC]=code.word;
-		}
+				code.word=code.word>>8;
+				registers[PC] = code.word - 4;
+			}
 		break;
 		case BNE:
-		if(cpsr != Z){
-		code.word=code.word<<8;
-		registers[PC]=code.word;
-		}
+			if(cpsr != Z){
+				code.word=code.word>>8;
+				registers[PC] = code.word - 4;
+			}
 		break;
 		case BLT:
-		if(cpsr == LT){
-			code.word=code.word<<8;
-			registers[PC]=code.word;
-		}
+			if(cpsr == LT){
+				code.word=code.word>>8;
+				registers[PC] = code.word - 4;
+			}
 		break;
 		case BGT: 
-		if(cpsr == GT){
-			code.word=code.word<<8;
-			registers[PC]=code.word;
-		}
+			if(cpsr == GT){
+				code.word=code.word>>8;
+				registers[PC] = code.word - 4;
+			}
 		break;
-		printf("EXITIING CASES\n");
-	}
-	
+		case AND:
+			set_reg(code.two, registers[code.one] & registers[code.zero]);
+			break;
+		case ORR:
+			set_reg(code.two, registers[code.one] | registers[code.zero]);
+			break;
+		case EOR:
+			set_reg(code.two, registers[code.one] ^ registers[code.zero]);
+			break;
+		case BLE:
+			if(cpsr == LT || cpsr == Z){
+				code.word=code.word>>8;
+				registers[PC] = code.word - 4;
+			}
+			break;
+		case BGE:
+			if(cpsr == GT || cpsr == Z){
+				code.word=code.word>>8;
+				registers[PC] = code.word - 4;
+			}
+			break;
+		case BL:
+			registers[LR] = registers[PC] + 4;
+			registers[PC] = code.word=code.word>>8;
+			registers[PC] = code.word - 4;
+			break;
+		}
+		
+	registers[PC] += 4;
 }
 void step_n(int n){
 	for(int i =0; i<n; i++)

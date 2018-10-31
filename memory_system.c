@@ -28,7 +28,7 @@ void memory_store(int address, unsigned char value) {
 unsigned char memory_fetch(int address) {
 	unsigned char lower, upper;
 	split_address(address, &lower, &upper);
-	return(memory_get(upper, lower));//TODO check if this is correct
+	return memory_get(decoder(upper), decoder(lower));//TODO check if this is correct
 
 }
 /*
@@ -36,7 +36,10 @@ unsigned char memory_fetch(int address) {
  */
 unsigned int memory_fetch_word(int address) {
 	Word getWord;
-	getWord.word = memory_fetch(address);
+	getWord.zero = memory_fetch(address);
+	getWord.one = memory_fetch(address + 1);
+	getWord.two = memory_fetch(address + 2);
+	getWord.three = memory_fetch(address + 3);
 	return getWord.word;
 }
 /* 
@@ -56,26 +59,24 @@ first line is address
 next lines are 32 bit quantitys
 */
 void load_memory(char *filename) {
-	printf("the start of load mem\n");
 	int address;
 	FILE *file;
-	char line[4];//this is four vecause 255 + null term
-	int linear;//this is the variable used to convert to unsigned chars from whatever i am getting from the file
+	int linear;
 	file = fopen(filename, "r");
 	int i = 0;
-	while (fgets(line, sizeof line, file) != NULL) {
-		
-		if (i == 0) {
-			address = (atoi(line)); 
+	fscanf(file, "0x%x", &address);
+	while (1) {	
+		if(fscanf(file, "%x", &linear) == EOF){
+			break;
 		}
 		else {
-			linear = atoi(line);
-			memory_store((address+i-1),linear);
-			//printf("%d,%d\n",(address+i-1),(unsigned char)linear);
+			memory_store_word(address,linear);
+			address += 4;
 		}
 		i++;
-		}
 	}
+	fclose(file);
+}
 
 	
 /*
