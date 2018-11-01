@@ -66,7 +66,7 @@ void load_memory(char *filename) {
 	int i = 0;
 	fscanf(file, "0x%x", &address);
 	while (1) {	
-		if(fscanf(file, "%x", &linear) == EOF){
+		if(fscanf(file, "%x", &linear) == EOF){//fgets is depricated
 			break;
 		}
 		else {
@@ -78,7 +78,23 @@ void load_memory(char *filename) {
 	fclose(file);
 }
 
-	
+//Memory dump 
+void memory_dump(int start, int bytes) {
+	if(bytes<0){
+	memory_spit();
+	return;
+}
+	int bob = start;
+	int i = 0;
+	while(bob<(start+bytes)){
+		printf("0x%02x ",memory_fetch(bob));
+		if(i%8==0 && i!=0)
+			printf("\n");
+		bob++;
+		i++;
+	}
+	printf("\n\n");
+}
 /*
  * This function should fill memory, but what it is doing is adding it by +1 +1, not +0 +1.
  */

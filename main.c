@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
     memory_store(0x111, 100);
     
     printf("memory_fetch(0x111): 0x%02x\n", memory_fetch(0x111));
-    memory_dump();
+    memory_dump(0,-1);
     
     load_memory("program1.txt");
     printf("memory_fetch_word(12): 0x%08x\n", memory_fetch_word(12));
