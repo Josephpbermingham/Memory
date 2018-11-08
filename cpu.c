@@ -43,6 +43,12 @@ void show_regs(){
 void step(){ //00(command) 00(r0) 00(r1) 00 (r3)
 	Word code;
 	code.word = memory_fetch_word(registers[PC]);
+	Word popped;
+	int p0;
+	int p1;
+	int p2;
+	int p3;
+	printf("%x,%x\n", code.word,code.zero + (code.one << 8));
 	switch(code.three){
 		case LDR:
 			set_reg(code.two, memory_fetch_word(code.zero + (code.one << 8)));
@@ -69,10 +75,10 @@ void step(){ //00(command) 00(r0) 00(r1) 00 (r3)
 			set_reg(code.two, registers[code.one] / registers[code.zero]);
 		break;
 		case CMP:
-			if(registers[code.one]>registers[code.zero]){
+			if(registers[code.one]<registers[code.zero]){
 				cpsr = LT;
 			}
-			else if(registers[code.one]<registers[code.zero]){
+			else if(registers[code.one]>registers[code.zero]){
 				cpsr = GT;
 			}
 			else if(registers[code.one]==registers[code.zero]){
@@ -134,21 +140,27 @@ void step(){ //00(command) 00(r0) 00(r1) 00 (r3)
 			registers[PC] = code.word - 4;
 			break;
 		case MOV:
-			set_reg(code.one, code.zero);
+			set_reg(code.one, registers[code.zero]);
 			break;
 		case BX:
-			set_reg(PC, code.zero - 4);
+			set_reg(PC, registers[code.zero] - 4);
 			break;
 		case BLX:
 			set_reg(LR, registers[PC] + 4);
-			set_reg(PC, code.zero - 4);
+			set_reg(PC, registers[code.zero] - 4);
 			break;
 		case PUSH:
 			set_reg(SR, registers[SR] - 4);
 			memory_store_word(registers[SR], registers[code.zero]);
 			break;
 		case POP:
-			set_reg(code.zero, memory_fetch_word(registers[SR]));
+			popped.word = memory_fetch_word(registers[SR]);
+			p3 = popped.zero;
+			p2 = popped.one;
+			p1 = popped.two;
+			p0 = popped.three;
+			popped.word = p3 + (p2 << 8) + (p1 << 16) + (p0 << 24);
+			set_reg(code.zero, popped.word);
 			set_reg(SR, registers[SR] + 4);
 			break;
 		}

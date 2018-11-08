@@ -8,7 +8,7 @@
 #include "cpu.h"
 
 int main(int argc, char **argv) {
-    printf("0x%08x\n", decoder(4));
+    /*printf("0x%08x\n", decoder(4));
     printf("0x%08x\n", decoder(1));
     
     printf("bit_find: %d\n", bit_find(8));
@@ -53,8 +53,8 @@ int main(int argc, char **argv) {
     step();
     printf("PC: %d\n", get_reg(PC));
     step();
-    printf("R0: %d\n", get_reg(R0));
-    
+    printf("R0: %d\n", get_reg(R0));*/
+    set_reg(SR,0x3f8);
     while (1) {
 		char cmd[100], file_name[100];
 		int num, num1;
@@ -90,6 +90,12 @@ int main(int argc, char **argv) {
 			printf("Enter file name: ");
 			scanf("%s", file_name);
 			load_memory(file_name);
+		}
+		else if(strcmp(cmd, "reset") == 0){
+			for(int i = 0; i < 16; i++){
+				set_reg(i, 0);
+			}
+			set_reg(SR, 0x3f8);
 		}
 		else {
 			printf("invalid cmd\n");
